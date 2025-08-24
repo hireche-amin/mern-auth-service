@@ -39,7 +39,7 @@ const userRegisterController = async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "3d",
+        expiresIn: "1d",
       }
     );
     //send the token .
@@ -47,7 +47,7 @@ const userRegisterController = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       samesite: process.env.NODE_ENV === "production" ? "strict" : "none",
-      expiresIn: 3 * 24 * 60 * 60,
+      expiresIn: "1d",
     });
 
     const mailOption = {
@@ -61,29 +61,7 @@ const userRegisterController = async (req, res) => {
       success: true,
       message: "Account created successfully",
     });
-    /*
-    //Generate otp 
-    const otp = Math.floor(100000 * Math.random () * 900000).toString() ; 
-     verifyOtp = otp ; 
-     newlyCreatedUser.otpExpireAt = Date.now() + 10*60*1000
-     await newlyCreatedUser.save(); 
-     const mailOption = {
-      from: process.env.SENDER_EMAIL,
-      to: email,
-      subject: "Email verification",
-      text: `Verify your EMAIL, your OTP is ${otp}`,
-    };
-    await transporter.sendMail(mailOption);
-    */
-   
-
-    res.status(201).json({
-      success: true,
-      message: "Account created successfully, please verify your email.",
-    });
-
     
-
   } catch (error) {
     console.error("Error in userRegestrationController", error);
     res.status(500).json({
@@ -96,7 +74,7 @@ const userLoginController = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "Please fill in all fields",
       });
@@ -104,28 +82,28 @@ const userLoginController = async (req, res) => {
     //Check user's email
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      res.status(403).json({
+     return res.status(403).json({
         succes: false,
         message: "Invalide email or password",
       });
-    }
+    };
     //Check user's password
     const isMatch = await Bcrypt.compare(password, user.password);
     if (!isMatch) {
-      res.status(403).json({
+      return res.status(403).json({
         success: false,
         message: "Invalide email or password",
       });
-    }
+    };
 
     //Generate a token
     const token = Jwt.sign(
       {
-        id: user._id,
+        user_id: user._id,
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "3d",
+        expiresIn: "1d",
       }
     );
     //cookie-config
@@ -133,7 +111,7 @@ const userLoginController = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       samesite: process.env.NODE_ENV === "production" ? "strict" : "none",
-      expiresIn: 3 * 24 * 60 * 60,
+      expiresIn: "1d",
     });
     res.status(200).json({
       succes: true,
@@ -145,6 +123,95 @@ const userLoginController = async (req, res) => {
       success: false,
       message: "Internal server error. Please try again later",
     });
+  }
+};
+const sendOtpController = async(req,res) => {
+  try{
+  const {user_id} = req.user
+    const user = await User.findById(user_id); 
+    if(user.isAccountVerified) {
+      return res.status(400).json({
+        succes: false, 
+        message : 'Account already verified '
+      }); 
+    }; 
+     //Generate otp 
+    const otp = Math.floor(100000 + Math.random () * 900000) ; 
+     user.verifyOtp = otp ; 
+     user.otpExpireAt = Date.now() + 10*60*1000
+     await user.save(); 
+     const mailOption = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Account verification OTP ",
+      text: `Verify your EMAIL, your OTP is ${otp}`,
+    };
+    await transporter.sendMail(mailOption);
+    return res.status(201).json({
+      success: true,
+      message: " OTP verification  sent on your email . Please verify your account.",
+    });
+
+
+  }catch(error) {
+    console.error('Error in OTP send controller', error); 
+    return res.status(500).json({
+      success: false, 
+      message: "An Internal server error. Please try again later"
+    })
+  }
+};
+const otpVerificationController = async(req,res) => {
+  try{
+    const {user_id} = req.user;
+    const {otp} = req.body; 
+    if(!otp) {
+       return res.status(400).json({
+        succes: false, 
+        message : "Missing details."
+      })
+    }; 
+    const user = await User.findById(user_id); 
+    if(user.isAccountVerified == true) {
+      return res.status(400).json({
+        success : false, 
+        message : "Your account is already verified"
+      })
+    };
+    if(!user) {
+      return res.status(404).json({
+        success : false, 
+        message : "User not found"
+      })
+    }; 
+    if(user.verifyOtp === '' || user.verifyOtp  !== otp) {
+       return res.status(401).json({
+        succes : false, 
+        message : 'OTP is not valide. Please try again later.'
+      });
+    }; 
+    if(user.otpExpireAt < Date.now()) {
+       return res.status(401).json({
+        success : false, 
+        message : 'OTP expired. Please try again later.'
+
+      })
+    }; 
+    user.isAccountVerified = true ; 
+    user.verifyOtp = ''; 
+    user.otpExpireAt = 0 ; 
+    await user.save(); 
+    return res.status(200).json({
+      succes : false, 
+      message : 'Account verified successfully'
+    });
+
+  }catch(error){
+    console.error('Error in email verification controller', error); 
+    return res.status(500).json({
+      succes: true, 
+      message : "An internal server error. Please try again later"
+    })
   }
 };
 const logOutController = async (req, res) => {
@@ -172,4 +239,6 @@ module.exports = {
   userRegisterController,
   userLoginController,
   logOutController,
+  sendOtpController, 
+  otpVerificationController
 };
