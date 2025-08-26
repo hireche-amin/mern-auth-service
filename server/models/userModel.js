@@ -28,7 +28,7 @@ const userSchema = mongoose.Schema({
         default : ''
     }, 
     otpExpireAt : {
-        type : Number, 
+        type : Date, 
         default : 0
     }, 
     isAccountVerified : {
@@ -36,12 +36,18 @@ const userSchema = mongoose.Schema({
         default : false
     }, 
     resetOtp : {
-        type : String, 
-        default : ''
-    }, 
-    resetOtpexpireAt : {
-        type : Number, 
-        default : 0
+        code : {
+            type : String ,
+            default : ''
+        },
+        expireAt : { 
+            type : Number, 
+            default : 0
+        },
+        otpAttempts : {
+            type : Number, 
+            default : 0
+        }
     }
 },
 {

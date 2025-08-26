@@ -4,7 +4,7 @@ const authMiddleware = (req,res,next) =>  {
         //Extract the token from the cookie or the headers 
         const token = req.headers["authorization"]?.split(' ')[1] || req.cookies.token ; 
         if(!token) {
-                 res.status(403).json({
+                 return res.status(403).json({
                 success : false, 
                 message : 'Unauthorized : no token provided'
             })
