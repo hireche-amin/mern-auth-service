@@ -20,7 +20,7 @@ const userRegisterController = async (req, res) => {
     if (checkIfUserExists) {
       res.status(409).json({
         success: false,
-        message: "User allready exists. Please login or use a different email.",
+        message: "User allready exists. Please login or use a different email or name.",
       });
     }
     //Hash the user password(saving it inour db)
