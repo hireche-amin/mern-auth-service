@@ -1,10 +1,15 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import ReactDOM from 'react-dom/client'; // lets you render React into the DOM
+import { StrictMode } from 'react';// enables extra checks in dev
+import { BrowserRouter } from 'react-router-dom'; //// enables routing
 import './index.css'
 import App from './App.jsx'
 
-createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
+
   <StrictMode>
+    <BrowserRouter>
     <App />
-  </StrictMode>,
-)
+    </BrowserRouter>
+  </StrictMode>
+
+); 
