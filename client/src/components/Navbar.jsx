@@ -17,10 +17,8 @@
  * @requires axios
  * @requires react-toastify
  * 
- * @example
- * return <Navbar />
  */
-import React, { useContext, useState, useRef, useEffect } from "react"; // Added useRef, useEffect
+import React, { useContext, useState, useRef, useEffect } from "react"; 
 import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import AppContext from "../context/appContext";
@@ -101,7 +99,6 @@ const Navbar = () => {
       if (result.success) {
         toast.success(result.message);
         navigate("/email-verify");
-        setIsMenuOpen(false);
       }
     } catch (error) {
       if (error.response) {
