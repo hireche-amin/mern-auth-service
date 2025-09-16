@@ -89,7 +89,7 @@ const ResetPassword = () => {
       ></img>
       {/*Email id form*/}
       {!isEmailSent&& 
-      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-70 sm:w-100  text-indigo-300 text-xs sm:text-xl  ">
+      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-72 sm:w-96  text-indigo-300 text-xs sm:text-sm  ">
         <h2 className="text-sm sm:text-2xl font-semibold text-white text-center ">
           Reset password
         </h2>
@@ -119,7 +119,7 @@ const ResetPassword = () => {
 }
       {/* OTP verification*/}
       {isEmailSent && !isOtpSent &&
-      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-70 sm:w-100  text-indigo-300 text-sm sm:text-xl  ">
+      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-72 sm:w-96  text-indigo-300 text-sm sm:text-sm  ">
         <h2 className="text-sm sm:text-2xl font-semibold text-white text-center ">
           Reset password
         </h2>
@@ -150,7 +150,7 @@ const ResetPassword = () => {
 }
       {/**New password form */}
       {isEmailSent && isOtpSent && 
-      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-70 sm:w-100  text-indigo-300 text-sm sm:text-xl  ">
+      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-72 sm:w-96  text-indigo-300 text-sm sm:text-sm  ">
         <h2 className="text-sm sm:text-2xl font-semibold text-white text-center ">
           Reset password
         </h2>

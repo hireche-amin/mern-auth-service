@@ -87,7 +87,7 @@ const Login = () => {
       />
 
       {/* Authentication Form Container */}
-      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-96 text-indigo-300 text-sm sm:text-xl">
+      <div className= "bg-slate-900 p-10 rounded-lg shadow-lg w-72 sm:w-96 text-indigo-300 text-xs sm:text-sm">
         <h2 className="text-2xl font-semibold text-white text-center">
           {state === "Sign up" ? "Register now" : "Login now"}
         </h2>
@@ -116,7 +116,7 @@ const Login = () => {
           <div className="flex items-center gap-3 w-full px-6 py-2.5 rounded-full bg-[#333A5C] text-white">
             <img src={assets.mail_icon} alt="Email icon" />
             <input
-              className="bg-transparent outline-none"
+              className="bg-transparent outline-none  sm:w-64 "
               type="email"
               placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
@@ -159,7 +159,7 @@ const Login = () => {
             <p className="text-center text-xs text mt-2 text-gray-400">
               Already have an account?{' '}
               <span
-                className="text-sm text-indigo-500 font-semibold cursor-pointer underline"
+                className="text-xs sm:text-sm text-indigo-500 font-semibold cursor-pointer underline"
                 onClick={() => setState('Sign in')}
               >
                 Login here
@@ -169,7 +169,7 @@ const Login = () => {
             <p className="text-center text-xs text-gray-400 mt-2">
               Don't have an account? {' '}
               <span
-                className="text-sm font-semibold text-indigo-500 cursor-pointer underline"
+                className="text-xs sm:text-sm font-semibold text-indigo-500 cursor-pointer underline"
                 onClick={() => setState('Sign up')}
               >
                 Sign up here
