@@ -3,6 +3,15 @@ const Jwt = require("jsonwebtoken");
 const Bcrypt = require("bcryptjs");
 const transporter = require("../utils/nodeMailer");
 const {EMAIL_VERIFY_TEMPLATE,PASSWORD_RESET_TEMPLATE} = require('../utils/emailTemplates'); 
+/**
+ * Registers a new user by validating input, hashing password, saving to DB,
+ * generating a JWT, setting cookie, and sending a welcome email.
+ * @async
+ * @function userRegisterController
+ * @param {import("express").Request} req - Express request object
+ * @param {import("express").Response} res - Express response object
+ * @returns {Promise<void>}
+ */
 const userRegisterController = async (req, res) => {
   try {
     //Extract user's informations.
@@ -71,6 +80,15 @@ const userRegisterController = async (req, res) => {
     });
   }
 };
+/**
+ * Logs in a user by validating credentials, generating a JWT,
+ * and setting it in cookies.
+ * @async
+ * @function userLoginController
+ * @param {import("express").Request} req - Express request object
+ * @param {import("express").Response} res - Express response object
+ * @returns {Promise<void>}
+ */
 const userLoginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -126,6 +144,14 @@ const userLoginController = async (req, res) => {
     });
   }
 };
+/**
+ * Sends an OTP to the user’s registered email for account verification.
+ * @async
+ * @function sendOtpController
+ * @param {import("express").Request} req - Express request object
+ * @param {import("express").Response} res - Express response object
+ * @returns {Promise<void>}
+ */
 const sendOtpController = async(req,res) => {
   try{
   const {user_id} = req.user
@@ -163,6 +189,14 @@ const sendOtpController = async(req,res) => {
     })
   }
 };
+/**
+ * Verifies the OTP sent to the user’s email and marks account as verified.
+ * @async
+ * @function otpVerificationController
+ * @param {import("express").Request} req - Express request object
+ * @param {import("express").Response} res - Express response object
+ * @returns {Promise<void>}
+ */
 const otpVerificationController = async(req,res) => {
   try{
     const {user_id} = req.user;
@@ -216,6 +250,14 @@ const otpVerificationController = async(req,res) => {
     })
   }
 };
+/**
+ * Sends an OTP for password reset to the user’s email if account exists.
+ * @async
+ * @function requestOtpForPasswordReset
+ * @param {import("express").Request} req - Express request object
+ * @param {import("express").Response} res - Express response object
+ * @returns {Promise<void>}
+ */
 const requestOtpForPasswordReset = async (req,res) => {
   try{
     const {email} = req.body; 
@@ -264,6 +306,14 @@ const requestOtpForPasswordReset = async (req,res) => {
     })
   };
 }; 
+/**
+ * Resets the user’s password using a valid OTP and ensures the new password is different.
+ * @async
+ * @function resetPasswordWithOtpController
+ * @param {import("express").Request} req - Express request object
+ * @param {import("express").Response} res - Express response object
+ * @returns {Promise<void>}
+ */
 const resetPasswordWithOtpController = async (req,res) => {
   try{
     const  {otp,email,newPassword} = req.body ; 
@@ -336,6 +386,14 @@ const resetPasswordWithOtpController = async (req,res) => {
     });
   };
 };
+/**
+ * Logs out a user by clearing the authentication token cookie.
+ * @async
+ * @function logOutController
+ * @param {import("express").Request} req - Express request object
+ * @param {import("express").Response} res - Express response object
+ * @returns {Promise<void>}
+ */
 const logOutController = async (req, res) => {
   try {
     res.clearCookie("token", {
