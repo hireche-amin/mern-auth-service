@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const Jwt = require("jsonwebtoken");
 const Bcrypt = require("bcryptjs");
 const transporter = require("../utils/nodeMailer");
+const {EMAIL_VERIFY_TEMPLATE,PASSWORD_RESET_TEMPLATE} = require('../utils/emailTemplates'); 
 const userRegisterController = async (req, res) => {
   try {
     //Extract user's informations.
@@ -57,7 +58,7 @@ const userRegisterController = async (req, res) => {
       text: `Welcome to amin's academy website. Your account has been created with email id ${email}  `,
     };
     await transporter.sendMail(mailOption);
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Account created successfully",
     });
@@ -114,7 +115,7 @@ const userLoginController = async (req, res) => {
       expiresIn: "1d",
     });
     res.status(200).json({
-      succes: true,
+      success: true,
       message: "Login successful",
     });
   } catch (error) {
@@ -140,11 +141,12 @@ const sendOtpController = async(req,res) => {
      user.verifyOtp = otp ; 
      user.otpExpireAt = Date.now() + 10*60*1000
      await user.save(); 
+     const email = user.email
      const mailOption = {
       from: process.env.SENDER_EMAIL,
       to: user.email,
       subject: "Account verification OTP ",
-      text: `Verify your EMAIL, your OTP is ${otp}`,
+      html:EMAIL_VERIFY_TEMPLATE.replaceAll(`{{otp}}`,otp).replaceAll(`{{email}}`,email)
     };
     await transporter.sendMail(mailOption);
     return res.status(201).json({
@@ -202,7 +204,7 @@ const otpVerificationController = async(req,res) => {
     user.otpExpireAt = 0 ; 
     await user.save(); 
     return res.status(200).json({
-      succes : true, 
+      success : true, 
       message : 'Account verified successfully'
     });
 
@@ -219,7 +221,7 @@ const requestOtpForPasswordReset = async (req,res) => {
     const {email} = req.body; 
     if(!email){
       return res.status(400).json({
-        succes : false, 
+        success : false, 
         message : "Please fill in the email field"
       })
     };
@@ -227,7 +229,7 @@ const requestOtpForPasswordReset = async (req,res) => {
     const user = await User.findOne({email}); 
     if(!user) {
       return res.status(400).json({
-        succes : false, 
+        success : false, 
         message : "User not found "
       })
     }; 
@@ -245,26 +247,26 @@ const requestOtpForPasswordReset = async (req,res) => {
       from: process.env.SENDER_EMAIL,
       to: user.email,
       subject: "Password reset OTP ",
-      text: `Reset your password, your OTP is : ${otp}`,
+      html : PASSWORD_RESET_TEMPLATE.replaceAll(`{{otp}}`,otp).replaceAll(`{{email}}`,email)
     };
     await transporter.sendMail(mailOption);
     return res.status(200).json({
       success: true, 
-      message : "OTP sent to your email."
+      message : "OTP sent to your email. Please check it"
     })
 
 
   }catch(error) {
     console.error('Error from OTP reset controller', error); 
     res.status(500).json({
-      succes: false, 
+      success: false, 
       message : "An internal server error has occured"
     })
   };
 }; 
 const resetPasswordWithOtpController = async (req,res) => {
   try{
-    const  {otp,email,password} = req.body ; 
+    const  {otp,email,newPassword} = req.body ; 
     if(!otp || !email ) {
       return res.status(400).json({
         success : false, 
@@ -309,16 +311,16 @@ const resetPasswordWithOtpController = async (req,res) => {
     }; 
 
     //If valide but user enters same password
-   const isPasswordMatchOldOne = await Bcrypt.compare(password,user.password); 
+   const isPasswordMatchOldOne = await Bcrypt.compare(newPassword,user.password); 
    if(isPasswordMatchOldOne) {
     return res.status(400).json({
-      succes : false, 
+      success : false, 
       message : 'Password already exists. Please try again'
     })
    };
    //If valide
     const salt = await Bcrypt.genSalt(10)
-    hashedNewPassword= await Bcrypt.hash(password,salt); 
+    hashedNewPassword= await Bcrypt.hash(newPassword,salt); 
    user.password = hashedNewPassword
    user.resetOtp = { code : '', expireAt : 0, otpAttempts : 0};
     await user.save() ; 

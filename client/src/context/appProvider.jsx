@@ -75,7 +75,7 @@ export const AppContextProvider = (props) => {
         isLoggedIn, setIsLoggedIn,
         userData, setUserData,
         getUsersData,
-        getUserAuthState
+        getUserAuthState,
     }
     
     // Provides the context value to all child components

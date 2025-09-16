@@ -1,33 +1,32 @@
  const User = require('../models/userModel');
  const getAllUsers = async (req,res) =>  {
   try{
-    const users = await User.find({}); 
-    if(users.length > 0) {
-      const userInfo = users.map(user => ({
-        username : user.username, 
-        isAccountVerified : user.isAccountVerified
-      }))
-      return res.status(200).json({
-        success : true, 
-        data : {
-          userInfo
-        }
-      
-      });
-    }else{
+    const {user_id} = req.user
+    const user = await User.findById(user_id); 
+    if(!user) {
       return res.status(404).json({
-        succes :false, 
-        message : "No user found"
+        success: false, 
+        message: 'User not found!'
       })
-    };
-  }catch(error) {
+    } 
+   return res.status(200).json({
+      success: true, 
+      userData : {
+        id : user._id,
+        name : user.username,
+        isAccountVerified : user.isAccountVerified
+      }
+    })
+      
+  }
+  catch(error) {
     console.error(`Error in users' controller`,error); 
     return res.status(500).json({
       success : false, 
       message : 'Internal server error. Please try again'
     })
   }
-}; 
+};
 const deleteUser = async(req,res) => {
   try{
     const getUserId = req.params.id; 
@@ -35,7 +34,7 @@ const deleteUser = async(req,res) => {
     if(user) {
       return res.status(200).json({
         success: true, 
-        message : `user with id ${getUserId} deleted successfully`
+        message : `user with id ${getUserId} has been deleted successfully`
       })
     }
   }catch(error) {
