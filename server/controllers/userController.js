@@ -1,5 +1,30 @@
- const User = require('../models/userModel');
- const getAllUsers = async (req,res) =>  {
+const User = require('../models/userModel');
+
+/**
+ * @function getAllUsers
+ * @description Retrieves the authenticated user's details from the database.
+ * 
+ * @async
+ * @param {Object} req - Express request object containing `user` with `user_id`.
+ * @param {Object} res - Express response object used to return JSON responses.
+ * 
+ * @returns {JSON} 
+ * - 200: Returns user data (id, username, verification status).
+ * - 404: User not found.
+ * - 500: Internal server error.
+ * 
+ * @example
+ * // Example response on success:
+ * {
+ *   "success": true,
+ *   "userData": {
+ *     "id": "64c8a12f9e8...",
+ *     "name": "john_doe",
+ *     "isAccountVerified": true
+ *   }
+ * }
+ */
+const getAllUsers = async (req,res) =>  {
   try{
     const {user_id} = req.user
     const user = await User.findById(user_id); 
@@ -27,6 +52,26 @@
     })
   }
 };
+
+/**
+ * @function deleteUser
+ * @description Deletes a user by their ID.
+ * 
+ * @async
+ * @param {Object} req - Express request object containing `params.id` (user ID).
+ * @param {Object} res - Express response object used to return JSON responses.
+ * 
+ * @returns {JSON} 
+ * - 200: User deleted successfully.
+ * - 500: Internal server error.
+ * 
+ * @example
+ * // Example response on success:
+ * {
+ *   "success": true,
+ *   "message": "user with id 64c8a12f9e8... has been deleted successfully"
+ * }
+ */
 const deleteUser = async(req,res) => {
   try{
     const getUserId = req.params.id; 
