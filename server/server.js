@@ -9,14 +9,19 @@ const userRoute  = require('./routes/userRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000; 
 
-//Middleware
+// Middleware
+
+// Parse incoming requests with JSON payloads
 app.use(express.json()); 
+
+// "credentials: true" allows cookies and authorization headers to be sent
 app.use(cors({
     origin : 'http://localhost:5173',
     credentials : true // Allows cookies and authorization headers . 
 })); 
-app.use(cookieParser());
 
+// Parse cookies from the request headers, making them accessible via req.cookies
+app.use(cookieParser());
 app.use('/auth/api',authRoute);
 app.use('/api',userRoute);
 
