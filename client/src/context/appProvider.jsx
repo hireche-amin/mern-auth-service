@@ -31,6 +31,7 @@ export const AppContextProvider = (props) => {
      */
     const getUsersData = async () => {
         try{
+            axios.defaults.withCredentials=true
            const response =  await axios.get(backendUrl + '/api/users'); 
          if(response.data.success){
             setUserData(response.data.userData)
@@ -48,6 +49,7 @@ export const AppContextProvider = (props) => {
      */
     const getUserAuthState = async () => {
         try{
+            axios.defaults.withCredentials= true
             const response = await axios.get(backendUrl + '/api/users'); 
             const result = response.data
             if(result.success) {

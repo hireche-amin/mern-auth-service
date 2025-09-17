@@ -44,8 +44,6 @@ const Login = () => {
       
       // Configure axios for cookie-based authentication and timeout
       axios.defaults.withCredentials = true; // Automatically attaches cookies
-      axios.defaults.timeout = 1000; // Set request timeout (consider increasing for production)
-      
       let response;
       
       // Determine which API endpoint to call based on the form state

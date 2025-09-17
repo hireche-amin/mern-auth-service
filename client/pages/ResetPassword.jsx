@@ -84,6 +84,7 @@ const ResetPassword = () => {
   const emailSubmitHandler = async (e) => {
     try {
       e.preventDefault();
+      axios.defaults.withCredentials=true;
       const response = await axios.post(backendUrl + "/auth/api/reset-otp", {
         email,
       });
