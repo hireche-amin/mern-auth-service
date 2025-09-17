@@ -64,7 +64,6 @@ const Navbar = () => {
   const logoutFunc = async () => {
     try {
       axios.defaults.withCredentials = true;
-      axios.defaults.timeout = 1000;
       const response = await axios.post(backendUrl + "/auth/api/logout");
       const result = response.data;
       if (result.success) {
@@ -93,7 +92,6 @@ const Navbar = () => {
   const emailVerify = async () => {
     try {
       axios.defaults.withCredentials = true;
-      axios.defaults.timeout = 1000;
       const response = await axios.post(backendUrl + "/auth/api/send-otp");
       const result = response.data;
       if (result.success) {
