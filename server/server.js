@@ -16,7 +16,7 @@ app.use(express.json());
 
 // "credentials: true" allows cookies and authorization headers to be sent
 app.use(cors({
-    origin : 'https://mern-auth-service-frontend.onrender.com',
+    origin : 'https://mern-auth-service-frontend.onrender.com/',
     credentials : true // Allows cookies and authorization headers . 
 })); 
 
