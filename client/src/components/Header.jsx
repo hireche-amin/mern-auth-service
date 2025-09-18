@@ -57,7 +57,7 @@ const Header = () => {
             {/* Disabled call-to-action button with tooltip */}
             <button 
                 className="border-gray-800 border-solid border-1 rounded-full px-6 py-2 text-gray-800 hover:bg-gray-100 cursor-not-allowed"
-                title="This feature is still in development"
+                title="This feature still in development"
             >
                 Get started
             </button>
