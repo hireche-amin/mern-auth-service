@@ -15,6 +15,7 @@ import React from "react";
 import { assets } from "../assets/assets";
 import { useContext } from "react";
 import AppContext from "../context/appContext";
+import { toast } from "react-toastify";
 
 /**
  * Header component that displays user information and welcome content
@@ -23,6 +24,9 @@ import AppContext from "../context/appContext";
 const Header = () => {
     // Access user data from application context
     const { userData } = useContext(AppContext);
+    function handleClick () {
+        toast('🚧 This feature  still in development. Please check back later!')
+    }
     
     return (
         <div className="flex flex-col items-center p-20 px-4 text-center text-gray-800 ">
@@ -56,8 +60,8 @@ const Header = () => {
             
             {/* Disabled call-to-action button with tooltip */}
             <button 
-                className="border-gray-800 border-solid border-1 rounded-full px-6 py-2 text-gray-800 hover:bg-gray-100 cursor-not-allowed"
-                title="This feature still in development"
+                className="border-gray-800 border-solid border-1 rounded-full px-6 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer"
+                onClick={handleClick}
             >
                 Get started
             </button>
