@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * AppContextProvider Component
  * 
@@ -68,8 +69,8 @@ export const AppContextProvider = (props) => {
 
     // Effect to check authentication state when component mounts
     useEffect(() => {
-        getUserAuthState
-    });
+        getUserAuthState()
+    },[]);
 
     // Value object containing all state and functions to be provided via context
     const value = {
